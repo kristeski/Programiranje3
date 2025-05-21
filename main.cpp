@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-const int N = 2e6 + 1;
+const int N = 2e5 + 1;
 vector<int> dsu(N, -1);
 vector<tuple<int, int, int>> edge;
 int n, m, mst = 0;
