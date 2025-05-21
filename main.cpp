@@ -2,42 +2,30 @@
 using namespace std;
 
 const int N = 2e5 + 1;
-vector<int> dsu(N, -1);
-vector<tuple<int, int, int>> edge;
+bool vis[N];
 int n, m, mst = 0;
+vector<pair<int, int>> adj[N];
 
-int findp(int nd) {
-    if(dsu[nd] >= 0)
-        return dsu[nd] = findp(dsu[nd]);
-    else
-        return nd;
-}
-void uni(int a, int b) {
-    if(dsu[a] > dsu[b])
-        swap(a, b);
-    dsu[a] += dsu[b];
-    dsu[b] = a;
-}
-int main()
-{
+
+int main() {
     cin >> n >> m;
-    edge.reserve(m);
     while(m--) {
         int a, b, c;
         cin >> a >> b >> c;
-        edge.push_back({c, a, b});
+        adj[a].push_back({c, b});
+        adj[b].push_back({c, a});
     }
-    sort(edge.begin(), edge.end());
-    for(auto e : edge)  {
-        auto [w, u, v] = e;
-        u = findp(u);
-        v = findp(v);
-        if(u == v)
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, 0});
+    while(!pq.empty()) {
+        auto [w, v] = pq.top();
+        pq.pop();
+        if(vis[v])
             continue;
-        else {
-            mst += w;
-            uni(u, v);
-        }
+        vis[v] = true;
+        mst += w;
+        for(auto &p : adj[v])
+            pq.push(p);
     }
     cout << mst;
 }
